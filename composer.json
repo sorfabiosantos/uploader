@@ -14,7 +14,7 @@
   },
   "autoload": {
     "psr-4": {
-      "SeuNamespace\\": "src/"
+      "SorFabioSantos\\Uploader\\": "src/"
     }
   }
 }

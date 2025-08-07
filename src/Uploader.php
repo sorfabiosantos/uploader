@@ -1,6 +1,6 @@
 <?php
 
-namespace Sorfabiosantos\Uploader;
+namespace SorFabioSantos\Uploader;
 /*
  * Class Uploader
  */
