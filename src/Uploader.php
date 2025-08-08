@@ -25,31 +25,44 @@ class Uploader {
     }
 
     /**
+     * Formata o tamanho em bytes para KB ou MB
+     */
+    private function formatSize($bytes)
+    {
+        if ($bytes >= 1048576) {
+            return number_format($bytes / 1048576, 2) . ' MB';
+        }
+        return number_format($bytes / 1024, 2) . ' KB';
+    }
+
+    /**
      * Upload de uma imagem
      */
     public function Image($file): bool|string
     {
         // Verifica tamanho
         if ($file['size'] > IMAGE_MAX_SIZE || $file['size'] < IMAGE_MIN_SIZE) {
-            $this->message = "Tamanho inválido para a imagem. Deve ser entre 10KB e 5MB.";
+            $this->message = str_replace([
+                IMAGE_MIN_SIZE, IMAGE_MAX_SIZE
+            ], [
+                $this->formatSize(IMAGE_MIN_SIZE),
+                $this->formatSize(IMAGE_MAX_SIZE)
+            ], IMAGE_SIZE_ERROR_MESSAGE);
             return false;
         }
         // Verifica tipo
         if (!in_array($file['type'], ALLOWED_IMAGE_TYPES)) {
-            $this->message = "Tipo de imagem inválido. Apenas JPG, PNG e GIF são permitidos.";
+            $this->message = IMAGE_TYPE_ERROR_MESSAGE;
             return false;
         }
-
         // extrair a extensão do arquivo
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-
         $target = IMAGE_DIR . '/' . md5(uniqid(rand())) . "." . $extension;
         // Move  arquivo
         if(!move_uploaded_file($file['tmp_name'], $target)) {
-            $this->message = "Erro ao mover o arquivo para o diretório de destino.";
+            $this->message = IMAGE_MOVE_ERROR_MESSAGE;
             return false;
         }
-
         return $target;
     }
 
@@ -59,19 +72,23 @@ class Uploader {
     public function File($file): bool|string
     {
         // Verifica tamanho
-        if ($file['size'] > FILE_MAX_SIZE) {
-            $this->message = "Tamanho inválido para o arquivo. Deve ser até 5MB.";
+        if ($file['size'] > FILE_MAX_SIZE || $file['size'] < FILE_MIN_SIZE) {
+            $this->message = str_replace(
+                FILE_MAX_SIZE,
+                $this->formatSize(FILE_MAX_SIZE),
+                FILE_SIZE_ERROR_MESSAGE
+            );
             return false;
         }
         // Verifica tipo
         if (!in_array($file['type'], ALLOWED_FILE_TYPES)) {
-            $this->message = "Tipo de arquivo inválido. Apenas PDF, DOC, DOCX, XLS, XLSX e TXT são permitidos.";
+            $this->message = FILE_TYPE_ERROR_MESSAGE;
             return false;
         }
         // Move arquivo
         $target = FILE_DIR . '/' . basename($file['name']);
         if (!move_uploaded_file($file['tmp_name'], $target)) {
-            $this->message = "Erro ao mover o arquivo para o diretório de destino.";
+            $this->message = FILE_MOVE_ERROR_MESSAGE;
             return false;
         }
         return $target;
