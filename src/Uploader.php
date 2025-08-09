@@ -3,29 +3,48 @@
 namespace SorFabioSantos\Uploader;
 /*
  * Class Uploader
+ * @author Fábio Santos <fabiosantos@ifsul.edu.br>
+ * @package SorFabioSantos\Uploader
+ * @version 1.0.4
  */
 class Uploader {
+    /**
+     * @var
+     */
     private $message;
+
+    /**
+     *
+     */
     public function __construct()
     {
-        $this->createDirectory(IMAGE_DIR);
-        $this->createDirectory(FILE_DIR);
+
+        $this->createDirectory("/../.." . IMAGE_DIR);
+        $this->createDirectory("/../.." . FILE_DIR);
     }
 
+    /**
+     * @return string
+     */
     public function getMessage(): string
     {
         return $this->message;
     }
 
+    /**
+     * @param $dir
+     * @return void
+     */
     private function createDirectory($dir)
     {
-        if (!is_dir($dir)) {
-            mkdir($dir, 0777, true);
+        if (!is_dir(__DIR__ . $dir)) {
+            mkdir(__DIR__ . $dir, 0777, true);
         }
     }
 
     /**
-     * Formata o tamanho em bytes para KB ou MB
+     * @param $bytes
+     * @return string
      */
     private function formatSize($bytes)
     {
@@ -36,11 +55,11 @@ class Uploader {
     }
 
     /**
-     * Upload de uma imagem
+     * @param $file
+     * @return bool|string
      */
     public function Image($file): bool|string
     {
-        // Verifica tamanho
         if ($file['size'] > IMAGE_MAX_SIZE || $file['size'] < IMAGE_MIN_SIZE) {
             $this->message = str_replace([
                 IMAGE_MIN_SIZE, IMAGE_MAX_SIZE
@@ -50,28 +69,31 @@ class Uploader {
             ], IMAGE_SIZE_ERROR_MESSAGE);
             return false;
         }
-        // Verifica tipo
+
         if (!in_array($file['type'], ALLOWED_IMAGE_TYPES)) {
             $this->message = IMAGE_TYPE_ERROR_MESSAGE;
             return false;
         }
-        // extrair a extensão do arquivo
+
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
-        $target = IMAGE_DIR . '/' . md5(uniqid(rand())) . "." . $extension;
-        // Move  arquivo
-        if(!move_uploaded_file($file['tmp_name'], $target)) {
+        $imageName = md5(uniqid(rand())) . "." . $extension;
+        $target = "/../.." . IMAGE_DIR . '/' . $imageName;
+
+        if(!move_uploaded_file($file['tmp_name'], __DIR__ . $target)) {
             $this->message = IMAGE_MOVE_ERROR_MESSAGE;
             return false;
         }
-        return $target;
+
+        return $imageName;
+
     }
 
     /**
-     * Upload de um arquivo
+     * @param $file
+     * @return bool|string
      */
     public function File($file): bool|string
     {
-        // Verifica tamanho
         if ($file['size'] > FILE_MAX_SIZE || $file['size'] < FILE_MIN_SIZE) {
             $this->message = str_replace(
                 FILE_MAX_SIZE,
@@ -80,17 +102,21 @@ class Uploader {
             );
             return false;
         }
-        // Verifica tipo
+
         if (!in_array($file['type'], ALLOWED_FILE_TYPES)) {
             $this->message = FILE_TYPE_ERROR_MESSAGE;
             return false;
         }
-        // Move arquivo
-        $target = FILE_DIR . '/' . basename($file['name']);
-        if (!move_uploaded_file($file['tmp_name'], $target)) {
+
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $fileName = md5(uniqid(rand())) . "." . $extension;
+        $target = "/../.." . FILE_DIR . '/' . $fileName;
+
+        if (!move_uploaded_file($file['tmp_name'], __DIR__ . $target)) {
             $this->message = FILE_MOVE_ERROR_MESSAGE;
             return false;
         }
-        return $target;
+
+        return $fileName;
     }
 }
