@@ -19,8 +19,8 @@ class Uploader {
     public function __construct()
     {
 
-        $this->createDirectory("/../../.." . IMAGE_DIR);
-        $this->createDirectory("/../../.." . FILE_DIR);
+        $this->createDirectory("/../../../.." . IMAGE_DIR);
+        $this->createDirectory("/../../../.." . FILE_DIR);
     }
 
     /**
@@ -77,7 +77,7 @@ class Uploader {
 
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $imageName = md5(uniqid(rand())) . "." . $extension;
-        $target = "/../../.." . IMAGE_DIR . '/' . $imageName;
+        $target = "/../../../.." . IMAGE_DIR . '/' . $imageName;
 
         if(!move_uploaded_file($file['tmp_name'], __DIR__ . $target)) {
             $this->message = IMAGE_MOVE_ERROR_MESSAGE;
@@ -110,7 +110,7 @@ class Uploader {
 
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fileName = md5(uniqid(rand())) . "." . $extension;
-        $target = "/../../.." . FILE_DIR . '/' . $fileName;
+        $target = "/../../../.." . FILE_DIR . '/' . $fileName;
 
         if (!move_uploaded_file($file['tmp_name'], __DIR__ . $target)) {
             $this->message = FILE_MOVE_ERROR_MESSAGE;
