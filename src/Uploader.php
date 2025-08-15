@@ -5,7 +5,7 @@ namespace SorFabioSantos\Uploader;
  * Class Uploader
  * @author Fábio Santos <fabiosantos@ifsul.edu.br>
  * @package SorFabioSantos\Uploader
- * @version 1.0.7
+ * @version 1.0.8
  */
 class Uploader {
     /**
