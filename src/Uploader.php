@@ -84,7 +84,7 @@ class Uploader {
             return false;
         }
 
-        return $target;
+        return IMAGE_DIR . '/' . $imageName;
 
     }
 
@@ -117,6 +117,6 @@ class Uploader {
             return false;
         }
 
-        return $target;
+        return FILE_DIR . '/' . $fileName;
     }
 }
