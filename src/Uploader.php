@@ -5,7 +5,7 @@ namespace SorFabioSantos\Uploader;
  * Class Uploader
  * @author Fábio Santos <fabiosantos@ifsul.edu.br>
  * @package SorFabioSantos\Uploader
- * @version 1.0.6
+ * @version 1.0.7
  */
 class Uploader {
     /**
@@ -84,7 +84,7 @@ class Uploader {
             return false;
         }
 
-        return $imageName;
+        return $target;
 
     }
 
@@ -117,6 +117,6 @@ class Uploader {
             return false;
         }
 
-        return $fileName;
+        return $target;
     }
 }
